@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopstream - E-commerce</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Import the Inter font */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* --- Custom Tailwind Classes --- */
+    .light body {
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+
+    .dark body {
+      background-color: #1e293b;
+      color: #f1f5f9;
+    }
+
+    .light .bg-container {
+      background-color: #ffffff;
+    }
+
+    .dark .bg-container {
+      background-color: #334155;
+    }
+
+    .light .text-primary {
+      color: #4f46e5;
+    }
+
+    .dark .text-primary {
+      color: #818cf8;
+    }
+
+    .light .btn-primary {
+      background-color: #4f46e5;
+      color: #ffffff;
+    }
+
+    .light .btn-secondary {
+      background-color: #e2e8f0;
+      color: #1e293b;
+    }
+
+    .dark .btn-primary {
+      background-color: #818cf8;
+      color: #1e293b;
+    }
+
+    .dark .btn-secondary {
+      background-color: #475569;
+      color: #f1f5f9;
+    }
+
+    .light .border-accent {
+      border-color: #4f46e5;
+    }
+
+    .dark .border-accent {
+      border-color: #818cf8;
+    }
+
+    /* Custom animation for fade-in effect */
+    .page {
+      display: none;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Custom animation for bouncing icon */
+    .animate-bounce-custom {
+      animation: bounce 1s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(-25%);
+        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+      }
+
+      50% {
+        transform: translateY(0);
+        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      }
+    }
+
+    /* Utility classes for icon styling */
+    .icon {
+      width: 24px;
+      height: 24px;
+      stroke-width: 2;
+    }
+
+    /*
+     * CSS for the flipping login/signup forms.
+     * This creates a 3D effect where the card rotates to show the back side.
+     */
+    .flip-container {
+      perspective: 1000px;
+      /* Provides the 3D effect */
+      height: 100%;
+    }
+
+    .flipper {
+      position: relative;
+      transform-style: preserve-3d;
+      /* Allows child elements to be positioned in 3D space */
+      transition: transform 0.8s ease-in-out;
+      /* Smooth transition for the flip */
+      height: 100%;
+    }
+
+    .flip-container.is-flipped .flipper {
+      transform: rotateY(180deg);
+    }
+
+    .card-front,
+    .card-back {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      /* Hide the back of the element when not facing the user */
+      backface-visibility: hidden;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 transition-colors duration-300">
+
+  <header class="bg-container sticky top-0 z-50 shadow-sm border-b transition-colors duration-300">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center space-x-6">
+        <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+          <svg class="icon text-gray-600 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+        </button>
+        <div class="flex items-center space-x-2">
+          <img src="https://placehold.co/100x100/7F00FF/FFFFFF?text=SS" alt="ShopStream Logo" class="h-8 w-auto">
+          <a href="#home" class="logo font-extrabold text-2xl text-primary">ShopStream</a>
+        </div>
+      </div>
+
+      <nav class="hidden lg:flex space-x-6 text-gray-600 dark:text-gray-300 font-medium">
+        <a href="#products" class="hover:text-primary transition-colors">Shop</a>
+        <a href="#payment-methods" class="hover:text-primary transition-colors">Payment Methods</a>
+        <a href="#" class="hover:text-primary transition-colors">Sales & Coupons</a>
+        <a href="#tracking" class="hover:text-primary transition-colors">Tracking</a>
+        <a href="#returns" class="hover:text-primary transition-colors">Returns</a>
+      </nav>
+
+      <div class="flex items-center space-x-4">
+        <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+          <svg id="sun-icon" class="icon hidden text-gray-600 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1.5m6.636 1.864-.864.864M21 12h-1.5m-1.864 6.636-.864-.864M12 21v-1.5m-6.636-1.864.864-.864M3 12H4.5m1.864-6.636-.864.864"></path>
+          </svg>
+          <svg id="moon-icon" class="icon hidden text-gray-600 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.613.766-3.774-.325.029-.663.053-1 .053a10.275 10.275 0 0 0-7.399 3.421 10.275 10.275 0 0 0-3.421 7.399c0 5.636 4.564 10.2 10.2 10.2a9.72 9.72 0 0 0 7.399-3.421c-.501-.005-1.004-.01-1.503-.01Z" />
+          </svg>
+        </button>
+        <a href="#auth-page"
+          class="hidden md:flex p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+          <svg class="icon text-gray-600 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <circle cx="12" cy="7" r="3.25" stroke="currentColor" stroke-width="1.5" />
+            <path d="M12 20.462a8.232 8.232 0 0 1-5.758-2.313 7.5 7.5 0 0 1 11.516 0A8.232 8.232 0 0 1 12 20.462z"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+        </a>
+        <button id="cart-btn" class="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+          <svg class="icon text-gray-600 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M2.25 3h1.386c.51 0 .955.343 1.056.832L6.885 10.72a.75.75 0 0 0 1.056.832h11.23a.75.75 0 0 0 .684-.194l4.5-4.5a.75.75 0 0 0-.684-1.255H9.429a.75.75 0 0 1-.684-.194L4.318 3.864A1.875 1.875 0 0 0 2.25 3Z" />
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M15 12.75a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0ZM7.5 14.25a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+          </svg>
+          <span id="cart-count"
+            class="hidden absolute top-0 right-0 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-bold"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div id="mobile-menu"
+    class="fixed inset-y-0 left-0 bg-container shadow-xl z-50 w-64 transition-transform transform -translate-x-full lg:hidden">
+    <div class="p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold">Menu</h2>
+        <button id="close-mobile-menu-btn"
+          class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+          <svg class="icon text-gray-600 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <nav class="flex flex-col space-y-4 text-gray-700 dark:text-gray-300 font-medium">
+        <a href="#products"
+          class="mobile-nav-link block py-2 hover:bg-indigo-50 dark:hover:bg-gray-700 rounded-md px-2 transition-colors">Shop</a>
+        <a href="#payment-methods"
+          class="mobile-nav-link block py-2 hover:bg-indigo-50 dark:hover:bg-gray-700 rounded-md px-2 transition-colors">Payment
+          Methods</a>
+        <a href="#"
+          class="mobile-nav-link block py-2 hover:bg-indigo-50 dark:hover:bg-gray-700 rounded-md px-2 transition-colors">Sales
+          & Coupons</a>
+        <a href="#tracking"
+          class="mobile-nav-link block py-2 hover:bg-indigo-50 dark:hover:bg-gray-700 rounded-md px-2 transition-colors">Tracking</a>
+        <a href="#returns"
+          class="mobile-nav-link block py-2 hover:bg-indigo-50 dark:hover:bg-gray-700 rounded-md px-2 transition-colors">Returns</a>
+        <div class="border-t border-gray-200 dark:border-gray-600 pt-4 mt-4">
+          <a href="#auth-page"
+            class="mobile-nav-link block py-2 hover:bg-indigo-50 dark:hover:bg-gray-700 rounded-md px-2 transition-colors">Login/Sign
+            Up</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <div id="mini-cart"
+    class="fixed inset-y-0 right-0 bg-container shadow-xl z-50 w-full md:w-96 transition-transform transform translate-x-full">
+    <div class="p-6 h-full flex flex-col">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold">Shopping Cart</h2>
+        <button id="close-mini-cart-btn"
+          class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+          <svg class="icon text-gray-600 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div id="mini-cart-items-container" class="flex-1 overflow-y-auto">
+        </div>
+      <div id="mini-cart-summary" class="mt-auto pt-6 border-t border-gray-200 dark:border-gray-600">
+        <div class="flex justify-between font-bold text-lg mb-4">
+          <span>Total</span>
+          <span id="mini-cart-total-price">$0.00</span>
+        </div>
+        <a href="#checkout" id="mini-cart-checkout-btn"
+          class="w-full btn-primary py-3 rounded-lg font-semibold text-center hover:opacity-80 transition-opacity disabled:opacity-50">
+          Proceed to Checkout
+        </a>
+        <a href="#cart" id="mini-cart-view-btn"
+          class="w-full mt-2 text-primary py-3 rounded-lg border border-primary font-semibold text-center hover:bg-primary-50 transition-colors">
+          View Full Cart
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <main class="container mx-auto px-4 py-8">
+
+    <div id="home" class="page">
+      <div class="relative rounded-2xl overflow-hidden mb-12 shadow-xl">
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40"
+          style="background-image: url('https://placehold.co/1920x1080/7F00FF/FFFFFF?text=Abstract+Fashion+Scene');">
+        </div>
+        <div class="relative p-8 md:p-16 lg:p-24 text-center">
+          <h1 class="text-3xl md:text-5xl lg:text-7xl font-extrabold mb-4 text-gray-900 dark:text-white animate-fadeIn">Watch.
+            Shop. Stream.</h1>
+          <p class="text-base md:text-xl max-w-3xl mx-auto mb-8 text-gray-600 dark:text-gray-200">
+            ShopStream turns fashion into motion. Explore shoes, tees, pants and jackets through short videos and buy in a tap.
+          </p>
+          <div class="flex justify-center space-x-4">
+            <a href="#products"
+              class="btn-primary py-3 px-6 rounded-full font-semibold hover:opacity-80 transition-opacity">Shop now</a>
+            <a href="#payment-methods"
+              class="btn-secondary py-3 px-6 rounded-full font-semibold hover:opacity-80 transition-opacity">Payment Methods</a>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-8">Featured Products</h2>
+      <div id="featured-products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        </div>
+    </div>
+    
+    <div id="auth-page" class="page">
+        <div class="card-container" role="main" aria-label="Authentication forms">
+          <div class="card" id="auth-card" aria-live="polite" aria-atomic="true">
+    
+            <form class="front" id="login-form" novalidate>
+              <p class="title">Sign In</p>
+    
+              <div class="input-group">
+                <label for="login-identifier">Email, Phone or Username</label>
+                <input type="text" id="login-identifier" name="identifier" placeholder="Your email, phone or username"
+                  autocomplete="username" required />
+              </div>
+    
+              <div class="input-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" name="password" placeholder="Your password"
+                  autocomplete="current-password" required />
+              </div>
+    
+              <button type="submit" class="sign" aria-label="Sign in">Sign In</button>
+    
+              <button type="button" class="forgot-link" id="forgot-password-link" aria-label="Forgot Password?">Forgot
+                Password?</button>
+    
+              <div class="social-message" aria-hidden="true">
+                <div class="line"></div>
+                <p class="message">Or login with</p>
+                <div class="line"></div>
+              </div>
+    
+              <div class="social-icons" role="group" aria-label="Social login options">
+                <button id="google-signin-btn" class="icon" aria-label="Continue with Google" title="Continue with Google"
+                  type="button" tabindex="0" style="color:#fff;">
+                  <svg role="img" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#EA4335"
+                      d="M23.64 12.204c0-.74-.067-1.452-.187-2.134H12v4.04h6.337a5.41 5.41 0 01-2.34 3.553v2.958h3.78c2.19-2.018 3.456-5 3.456-8.417z" />
+                    <path fill="#34A853"
+                      d="M12 24c3.24 0 5.962-1.07 7.95-2.898l-3.78-2.96c-1.05.7-2.41 1.114-4.17 1.114-3.207 0-5.922-2.164-6.897-5.068H1.252v3.18A11.999 11.999 0 0012 24z" />
+                    <path fill="#4A90E2"
+                      d="M5.103 14.188a7.225 7.225 0 010-4.362V6.646H1.252a11.996 11.996 0 000 10.71l3.851-3.168z" />
+                    <path fill="#FBBC05"
+                      d="M12 5.202c1.832 0 3.466.63 4.76 1.87l3.57-3.57C17.95 1.998 15.244 1 12 1 7.857 1 4.262 3.578 2.982 7.39l3.82 2.964c.992-2.77 3.607-4.792 5.198-4.792z" />
+                  </svg>
+                </button>
+    
+                <button type="button" id="fb-login-btn" class="icon" aria-label="Continue with Facebook"
+                  title="Continue with Facebook" tabindex="0" style="color:#1877F2;">
+                  <svg role="img" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M22.675 0h-21.35C.595 0 0 .594 0 1.326v21.348C0 23.405.595 24 1.325 24h11.495v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.892-4.788 4.658-4.788 1.325 0 2.466.099 2.797.143v3.24l-1.92.001c-1.504 0-1.796.715-1.796 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.405 24 24 23.405 24 22.674V1.326C24 .594 23.405 0 22.675 0z" />
+                  </svg>
+                </button>
+    
+                <button id="twitter-login-btn" class="icon" aria-label="Continue with Twitter" title="Continue with Twitter"
+                  type="button" tabindex="0" style="color:#1DA1F2;">
+                  <svg role="img" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M23.954 4.57a10.019 10.019 0 01-2.825.775 4.932 4.932 0 002.163-2.724 10.078 10.078 0 01-3.127 1.195 4.916 4.916 0 00-8.375 4.482 13.942 13.942 0 01-10.118-5.14 4.902 4.902 0 001.52 6.574 4.9 4.9 0 01-2.224-.615v.06a4.916 4.916 0 003.946 4.808 4.935 4.935 0 01-2.213.085 4.916 4.916 0 004.588 3.417A9.867 9.867 0 012 19.54a13.945 13.945 0 007.548 2.209c9.057 0 14.01-7.506 14.01-14.01 0-.21-.005-.423-.015-.632A9.935 9.935 0 0024 4.59z" />
+                  </svg>
+                </button>
+    
+                <button id="github-login-btn" class="icon" aria-label="Continue with GitHub" title="Continue with GitHub"
+                  type="button" tabindex="0" style="color:#fff;">
+                  <svg role="img" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M12 0C5.374 0 0 5.373 0 12c0 5.303 3.438 9.8 8.207 11.387.6.113.793-.263.793-.583 0-.288-.01-1.05-.015-2.06-3.338.726-4.042-1.615-4.042-1.615-.546-1.386-1.332-1.755-1.332-1.755-1.089-.744.083-.728.083-.728 1.205.085 1.838 1.238 1.838 1.238 1.07 1.834 2.807 1.304 3.492.997.108-.774.419-1.305.762-1.605-2.665-.303-5.466-1.334-5.466-5.933 0-1.312.469-2.38 1.237-3.222-.124-.303-.536-1.52.117-3.168 0 0 1.008-.322 3.3 1.23a11.49 11.49 0 013.003-.404c1.019.005 2.046.137 3.003.404 2.29-1.552 3.296-1.23 3.296-1.23.655 1.648.243 2.865.12 3.168.77.842 1.235 1.91 1.235 3.222 0 4.61-2.804 5.625-5.475 5.921.43.372.814 1.103.814 2.222 0 1.606-.014 2.901-.014 3.293 0 .322.188.7.798.58C20.565 21.796 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
+                  </svg>
+                </button>
+              </div>
+    
+              <p class="toggle-text">Don't have an account? <a href="#" id="show-signup" role="button" tabindex="0">Sign up</a></p>
+            </form>
+    
+            <form class="back" id="signup-form" novalidate>
+              <p class="title">Create Account</p>
+    
+              <div class="input-group">
+                <label for="signup-username">Username</label>
+                <input type="text" id="signup-username" name="username" placeholder="Choose a username" autocomplete="username"
+                  required />
+              </div>
+    
+              <div class="input-group">
+                <label for="signup-contact">Email or Phone Number</label>
+                <input type="text" id="signup-contact" name="contact"
+                  placeholder="your.email@example.com or +1234567890" autocomplete="email tel" required />
+              </div>
+    
+              <div class="input-group">
+                <label for="signup-password">Password</label>
+                <input type="password" id="signup-password" name="password" placeholder="Create a password"
+                  autocomplete="new-password" required />
+              </div>
+    
+              <div class="input-group">
+                <label for="signup-password-confirm">Confirm Password</label>
+                <input type="password" id="signup-password-confirm" name="password_confirm"
+                  placeholder="Confirm your password" autocomplete="new-password" required />
+              </div>
+    
+              <button type="submit" class="sign" aria-label="Sign up">Sign Up</button>
+    
+              <p class="toggle-text">Already have an account? <a href="#" id="show-login" role="button" tabindex="0">Sign
+                  in</a></p>
+            </form>
+    
+            <form class="forgot" id="forgot-password-form" novalidate>
+              <p class="title">Forgot Password</p>
+    
+              <div class="input-group" id="fp-contact-group">
+                <label for="forgot-contact">Enter your Email or Phone Number</label>
+                <input type="text" id="forgot-contact" name="contact"
+                  placeholder="your.email@example.com or +1234567890" autocomplete="email tel" required />
+              </div>
+    
+              <div class="input-group" id="fp-otp-group" style="display:none;">
+                <label for="forgot-otp">Enter OTP code</label>
+                <input type="text" id="forgot-otp" name="otp" placeholder="One Time Password" inputmode="numeric" />
+              </div>
+    
+              <div class="input-group" id="fp-new-pass-group" style="display:none;">
+                <label for="forgot-new-password">New Password</label>
+                <input type="password" id="forgot-new-password" name="new_password" placeholder="New password"
+                  autocomplete="new-password" />
+              </div>
+    
+              <div class="input-group" id="fp-confirm-pass-group" style="display:none;">
+                <label for="forgot-confirm-password">Confirm New Password</label>
+                <input type="password" id="forgot-confirm-password" name="confirm_password"
+                  placeholder="Confirm new password" autocomplete="new-password" />
+              </div>
+    
+              <button type="submit" class="sign" id="forgot-submit-btn" aria-label="Submit">Send OTP</button>
+    
+              <button type="button" class="btn-link" id="forgot-cancel-btn" aria-label="Cancel Forgot Password">Cancel</button>
+            </form>
+          </div>
+        </div>
+    </div>
+    
+    <div id="products" class="page">
+      <h1 class="text-3xl font-bold mb-8">All Products</h1>
+      <div class="lg:grid lg:grid-cols-4 gap-8">
+        <aside class="lg:col-span-1 bg-container p-6 rounded-xl shadow-md mb-8 lg:mb-0">
+          <h2 class="text-xl font-bold mb-4">Filters</h2>
+          <div class="space-y-6">
+            <div>
+              <label for="sort-by" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sort by</label>
+              <select id="sort-by" class="w-full p-2 border rounded-md bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                <option value="relevance">Relevance</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="popularity">Popularity</option>
+              </select>
+            </div>
+            <div>
+              <h3 class="font-medium text-gray-700 dark:text-gray-300 mb-2">Category</h3>
+              <select id="filter-category"
+                class="w-full p-2 border rounded-md bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                <option value="All">All Categories</option>
+              </select>
+            </div>
+            <div>
+              <h3 class="font-medium text-gray-700 dark:text-gray-300 mb-2">Brand</h3>
+              <select id="filter-brand" class="w-full p-2 border rounded-md bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                <option value="All">All Brands</option>
+                </option>
+              </select>
+            </div>
+            <div>
+              <h3 class="font-medium text-gray-700 dark:text-gray-300 mb-2">Size</h3>
+              <select id="filter-size" class="w-full p-2 border rounded-md bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                <option value="All">All Sizes</option>
+              </select>
+            </div>
+            <div>
+              <h3 class="font-medium text-gray-700 dark:text-gray-300 mb-2">Price Range</h3>
+              <select id="filter-price"
+                class="w-full p-2 border rounded-md bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                <option value="All">All Prices</option>
+                <option value="0-50">Under $50</option>
+                <option value="50-100">$50 - $100</option>
+                <option value="100+">Over $100</option>
+              </select>
+            </div>
+          </div>
+        </aside>
+
+        <div id="product-grid-container" class="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          </div>
+      </div>
+    </div>
+
+    <div id="product-detail" class="page">
+      </div>
+
+    <div id="cart" class="page">
+      <h1 class="text-3xl font-bold mb-8">Shopping Cart</h1>
+      <div class="lg:grid lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 bg-container rounded-xl shadow-md p-6">
+          <div id="cart-items-container" class="divide-y divide-gray-200 dark:divide-gray-600">
+            </div>
+        </div>
+        <div class="lg:col-span-1 bg-container rounded-xl shadow-md p-6 mt-8 lg:mt-0 h-fit">
+          <h2 class="text-xl font-bold mb-4">Order Summary</h2>
+          <div class="space-y-3 mb-6 text-gray-600 dark:text-gray-400">
+            <div class="flex justify-between"><span>Subtotal</span><span id="cart-subtotal-price">$0.00</span></div>
+            <div class="flex justify-between"><span>Shipping</span><span id="cart-shipping-price">$5.00</span></div>
+            <div
+              class="flex justify-between font-bold text-xl pt-3 border-t border-gray-200 dark:border-gray-600"><span>Total</span><span
+                id="cart-total-price">$5.00</span></div>
+          </div>
+          <a href="#checkout" id="checkout-btn-full"
+            class="w-full btn-primary py-3 rounded-lg font-semibold text-center hover:opacity-80 transition-opacity disabled:opacity-50">
+            Proceed to Checkout
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div id="checkout" class="page">
+      <h1 class="text-3xl font-bold mb-8">Checkout</h1>
+      <div class="grid lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 bg-container rounded-xl shadow-md p-6">
+          <form id="checkout-form">
+            <h2 class="text-xl font-bold mb-6">Shipping Information</h2>
+            <div class="grid sm:grid-cols-2 gap-4 mb-6">
+              <input type="text" name="name" placeholder="Full Name"
+                class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+                required>
+              <input type="email" name="email" placeholder="Email Address"
+                class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+                required>
+              <input type="text" name="address" placeholder="Address"
+                class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-gray-50 dark:bg-gray-700 dark:border-gray-600 sm:col-span-2"
+                required>
+              <input type="text" name="city" placeholder="City"
+                class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+                required>
+              <input type="text" name="zip" placeholder="ZIP / Postal Code"
+                class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+                required>
+              <input type="text" name="country" placeholder="Country"
+                class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-gray-50 dark:bg-gray-700 dark:border-gray-600 sm:col-span-2"
+                required>
+            </div>
+
+            <h2 class="text-xl font-bold mb-6 mt-10">Payment Method</h2>
+            <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl border border-gray-200 dark:border-gray-600">
+              <div class="flex items-center mb-4">
+                <input type="radio" id="card" name="payment" value="card" checked
+                  class="h-4 w-4 text-primary focus:ring-primary">
+                <label for="card"
+                  class="ml-3 text-gray-700 dark:text-gray-300 font-medium flex items-center">
+                  <svg class="icon w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+                  </svg>
+                  Credit Card
+                </label>
+              </div>
+              <div class="grid sm:grid-cols-2 gap-4">
+                <input type="text" placeholder="Card Number"
+                  class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                <input type="text" placeholder="MM/YY"
+                  class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                <input type="text" placeholder="CVC"
+                  class="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+              </div>
+            </div>
+
+            <button type="submit"
+              class="w-full btn-primary py-3 rounded-lg font-semibold hover:opacity-80 transition-opacity mt-8">
+              Place Order
+            </button>
+          </form>
+          <div id="order-confirmation" class="hidden text-center py-12">
+            <svg class="icon h-20 w-20 text-green-500 mx-auto animate-bounce-custom" xmlns="http://www.w3.org/2000/svg"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3 0h15.75m-12.75 0H12m6.75 0H21M12 4.5v3.75m6.75 1.5H21M12 12.75h3.75M12 12.75a3 3 0 0 0-3 3m3-3a3 3 0 0 1 3 3m-3-3h-3m-3 0a3 3 0 0 0-3 3v2.25M6 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3 0H6" />
+            </svg>
+            <h2 class="mt-4 text-2xl font-bold">Order Placed Successfully!</h2>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">Thank you for your purchase. We've sent an order
+              confirmation to your email.</p>
+            <a href="#home"
+              class="btn-primary mt-6 py-3 px-6 rounded-lg font-semibold text-center hover:opacity-80 transition-opacity">Continue
+              Shopping</a>
+          </div>
+        </div>
+        <div class="lg:col-span-1 bg-container rounded-xl shadow-md p-6 h-fit">
+          <h2 class="text-xl font-bold mb-4">Order Summary</h2>
+          <div id="checkout-summary-items" class="divide-y divide-gray-200 dark:divide-gray-600 mb-4">
+            </div>
+          <div class="space-y-3 text-gray-600 dark:text-gray-400">
+            <div class="flex justify-between"><span>Subtotal</span><span id="checkout-subtotal-price">$0.00</span></div>
+            <div class="flex justify-between"><span>Shipping</span><span id="checkout-shipping-price">$5.00</span></div>
+            <div
+              class="flex justify-between font-bold text-xl pt-3 border-t border-gray-200 dark:border-gray-600"><span>Total</span><span
+                id="checkout-total-price">$5.00</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="payment-methods" class="page">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Payment Methods</h1>
+        <div class="bg-container rounded-xl shadow-md p-8">
+          <p class="text-gray-600 dark:text-gray-400 text-lg mb-6">
+            We offer a variety of secure payment options to make your shopping experience convenient and safe.
+          </p>
+          <ul class="space-y-4">
+            <li class="flex items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
+              <svg class="icon w-8 h-8 text-indigo-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+              </svg>
+              <div>
+                <h3 class="font-bold">Credit & Debit Cards</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">We accept Visa, Mastercard, American Express, and
+                  Discover.</p>
+              </div>
+            </li>
+            <li class="flex items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
+              <svg class="icon w-8 h-8 text-green-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M2.25 3h1.386c.51 0 .955.343 1.056.832L6.885 10.72a.75.75 0 0 0 1.056.832h11.23a.75.75 0 0 0 .684-.194l4.5-4.5a.75.75 0 0 0-.684-1.255H9.429a.75.75 0 0 1-.684-.194L4.318 3.864A1.875 1.875 0 0 0 2.25 3Z" />
+              </svg>
+              <div>
+                <h3 class="font-bold">PayPal</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Pay securely without sharing your financial details.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="tracking" class="page">
+      <div class="max-w-4xl mx-auto text-center">
+        <h1 class="text-3xl font-bold mb-8">Order Tracking</h1>
+        <div class="bg-container rounded-xl shadow-md p-8">
+          <svg class="icon w-20 h-20 text-indigo-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3 0h15.75m-12.75 0H12m6.75 0H21M12 4.5v3.75m6.75 1.5H21M12 12.75h3.75M12 12.75a3 3 0 0 0-3 3m3-3a3 3 0 0 1 3 3m-3-3h-3m-3 0a3 3 0 0 0-3 3v2.25M6 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3 0H6" />
+          </svg>
+          <h2 class="mt-4 text-2xl font-bold">Enter Your Tracking Number</h2>
+          <p class="mt-2 text-gray-600 dark:text-gray-400">Please enter your order's tracking number below to see its status.</p>
+          <form class="mt-6 flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
+            <input type="text" placeholder="Tracking Number" class="flex-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+            <button type="submit" class="btn-primary py-3 px-6 rounded-lg font-semibold hover:opacity-80 transition-opacity">Track Order</button>
+          </form>
+          <div id="tracking-status" class="mt-6 text-left p-4 rounded-lg bg-gray-50 dark:bg-gray-700 hidden">
+            <h3 class="font-bold">Order #123456789</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Status: <span class="text-green-600 font-medium">In Transit</span></p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Last update: 2024-08-12 10:30 AM</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="returns" class="page">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Returns & Exchanges</h1>
+        <div class="bg-container rounded-xl shadow-md p-8">
+          <p class="text-gray-600 dark:text-gray-400 text-lg mb-6">
+            We want you to be completely satisfied with your purchase. If you're not, we're here to help.
+          </p>
+          <div class="space-y-6">
+            <div>
+              <h2 class="text-xl font-bold mb-2">Our Return Policy</h2>
+              <p class="text-gray-600 dark:text-gray-400">
+                You can return most new, unopened items within 30 days of delivery for a full refund. We'll also pay the return shipping costs if the return is a result of our error (you received an incorrect or defective item, etc.).
+              </p>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold mb-2">How to Initiate a Return</h2>
+              <ol class="list-decimal list-inside text-gray-600 dark:text-gray-400 space-y-2">
+                <li>Log in to your account and go to your "Order History".</li>
+                <li>Find the order you wish to return and click on the "Request Return" button.</li>
+                <li>Follow the on-screen instructions to receive your return shipping label.</li>
+                <li>Package your item securely and drop it off at the designated carrier.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+  
+  <script>
+    // --- Page Routing ---
+    const pages = document.querySelectorAll('.page');
+    const navLinks = document.querySelectorAll('a[href^="#"]');
+
+    function showPage(pageId) {
+      pages.forEach(page => {
+        page.style.display = 'none';
+      });
+      const currentPage = document.querySelector(pageId);
+      if (currentPage) {
+        currentPage.style.display = 'block';
+      }
+    }
+
+    function route() {
+      const hash = window.location.hash || '#home';
+      showPage(hash);
+    }
+
+    window.addEventListener('hashchange', route);
+    window.addEventListener('load', route);
+
+
+    // --- Mobile Menu Toggle ---
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const closeMobileMenuBtn = document.getElementById('close-mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.remove('-translate-x-full');
+    });
+
+    closeMobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.add('-translate-x-full');
+    });
+
+    // Close mobile menu when a link is clicked
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('-translate-x-full');
+      });
+    });
+
+    // --- Mini Cart Toggle ---
+    const cartBtn = document.getElementById('cart-btn');
+    const closeMiniCartBtn = document.getElementById('close-mini-cart-btn');
+    const miniCart = document.getElementById('mini-cart');
+
+    cartBtn.addEventListener('click', () => {
+      miniCart.classList.remove('translate-x-full');
+    });
+
+    closeMiniCartBtn.addEventListener('click', () => {
+      miniCart.classList.add('translate-x-full');
+    });
+
+    // --- Dark Mode Toggle ---
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const sunIcon = document.getElementById('sun-icon');
+    const moonIcon = document.getElementById('moon-icon');
+    const htmlEl = document.documentElement;
+
+    function setTheme(theme) {
+      localStorage.setItem('theme', theme);
+      if (theme === 'dark') {
+        htmlEl.classList.add('dark');
+        htmlEl.classList.remove('light');
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+      } else {
+        htmlEl.classList.add('light');
+        htmlEl.classList.remove('dark');
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+      }
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      const currentTheme = localStorage.getItem('theme');
+      setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    });
+
+    // Set initial theme
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme) {
+      setTheme(storedTheme);
+    } else {
+      // Default to system preference
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        setTheme('dark');
+      } else {
+        setTheme('light');
+      }
+    }
+
+    // --- Dummy Products Data and Rendering ---
+    const productsData = [{
+      id: 1,
+      name: 'Modern T-shirt',
+      price: 29.99,
+      image: 'https://placehold.co/400x400/7F00FF/FFFFFF?text=T-Shirt',
+      description: 'A comfortable and stylish t-shirt made from 100% organic cotton.',
+      category: 'Tops',
+      brand: 'Urban Threads'
+    }, {
+      id: 2,
+      name: 'Cargo Pants',
+      price: 59.99,
+      image: 'https://placehold.co/400x400/0F9D58/FFFFFF?text=Pants',
+      description: 'Durable and practical cargo pants with multiple pockets.',
+      category: 'Bottoms',
+      brand: 'Trailblazer Gear'
+    }, {
+      id: 3,
+      name: 'Leather Jacket',
+      price: 199.99,
+      image: 'https://placehold.co/400x400/DB4437/FFFFFF?text=Jacket',
+      description: 'A high-quality leather jacket that will last a lifetime.',
+      category: 'Outerwear',
+      brand: 'Stitch & Hide'
+    }, {
+      id: 4,
+      name: 'Running Shoes',
+      price: 89.99,
+      image: 'https://placehold.co/400x400/4285F4/FFFFFF?text=Shoes',
+      description: 'Lightweight and supportive running shoes for your daily workout.',
+      category: 'Footwear',
+      brand: 'Nimbus'
+    }, ];
+
+    function renderProducts(containerId, products) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = products.map(product => `
+            <div class="bg-container rounded-xl shadow-md overflow-hidden">
+                <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <h3 class="font-bold text-lg mb-1">${product.name}</h3>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-2">${product.description}</p>
+                    <div class="flex justify-between items-center mt-4">
+                        <span class="text-xl font-bold text-primary">$${product.price.toFixed(2)}</span>
+                        <button class="add-to-cart-btn btn-primary py-2 px-4 rounded-lg font-semibold text-sm hover:opacity-80 transition-opacity" data-product-id="${product.id}">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    renderProducts('featured-products-container', productsData.slice(0, 4));
+    renderProducts('product-grid-container', productsData);
+
+
+    // --- Cart Logic ---
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    function saveCart() {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function updateCartCount() {
+      const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const cartCountEl = document.getElementById('cart-count');
+      if (count > 0) {
+        cartCountEl.textContent = count;
+        cartCountEl.classList.remove('hidden');
+      } else {
+        cartCountEl.classList.add('hidden');
+      }
+    }
+
+    function renderCartItems(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      if (cart.length === 0) {
+        container.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 p-8">Your cart is empty.</p>`;
+        return;
+      }
+
+      container.innerHTML = cart.map(item => `
+            <div class="flex items-center gap-4 py-4">
+                <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-md object-cover">
+                <div class="flex-1">
+                    <h4 class="font-bold">${item.name}</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Price: $${item.price.toFixed(2)}</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button class="update-qty-btn btn-secondary w-8 h-8 rounded-full text-lg font-bold" data-id="${item.id}" data-action="decrease">-</button>
+                    <span>${item.quantity}</span>
+                    <button class="update-qty-btn btn-secondary w-8 h-8 rounded-full text-lg font-bold" data-id="${item.id}" data-action="increase">+</button>
+                </div>
+                <span class="font-bold">$${(item.price * item.quantity).toFixed(2)}</span>
+                <button class="remove-from-cart-btn p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700" data-id="${item.id}">
+                    <svg class="icon w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        `).join('');
+
+      // Add event listeners for cart buttons
+      container.querySelectorAll('.update-qty-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const id = parseInt(e.target.dataset.id);
+          const action = e.target.dataset.action;
+          updateQuantity(id, action);
+        });
+      });
+      container.querySelectorAll('.remove-from-cart-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const id = parseInt(e.target.dataset.id);
+          removeFromCart(id);
+        });
+      });
+    }
+
+    function calculateCartTotal() {
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const shipping = cart.length > 0 ? 5.00 : 0.00;
+      const total = subtotal + shipping;
+
+      document.getElementById('cart-subtotal-price').textContent = `$${subtotal.toFixed(2)}`;
+      document.getElementById('cart-total-price').textContent = `$${total.toFixed(2)}`;
+      document.getElementById('mini-cart-total-price').textContent = `$${total.toFixed(2)}`;
+      document.getElementById('checkout-subtotal-price').textContent = `$${subtotal.toFixed(2)}`;
+      document.getElementById('checkout-total-price').textContent = `$${total.toFixed(2)}`;
+    }
+
+    function addToCart(productId) {
+      const product = productsData.find(p => p.id === productId);
+      if (product) {
+        const existingItem = cart.find(item => item.id === productId);
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          cart.push({
+            ...product,
+            quantity: 1
+          });
+        }
+        saveCart();
+        updateCartCount();
+        renderCartItems('mini-cart-items-container');
+        renderCartItems('cart-items-container');
+        calculateCartTotal();
+      }
+    }
+
+    function updateQuantity(productId, action) {
+      const item = cart.find(i => i.id === productId);
+      if (item) {
+        if (action === 'increase') {
+          item.quantity++;
+        } else if (action === 'decrease' && item.quantity > 1) {
+          item.quantity--;
+        }
+        saveCart();
+        updateCartCount();
+        renderCartItems('mini-cart-items-container');
+        renderCartItems('cart-items-container');
+        calculateCartTotal();
+      }
+    }
+
+    function removeFromCart(productId) {
+      cart = cart.filter(item => item.id !== productId);
+      saveCart();
+      updateCartCount();
+      renderCartItems('mini-cart-items-container');
+      renderCartItems('cart-items-container');
+      calculateCartTotal();
+    }
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Attach click listeners to all "Add to Cart" buttons
+      document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const productId = parseInt(e.target.dataset.productId);
+          addToCart(productId);
+        });
+      });
+
+      // Initial render on page load
+      updateCartCount();
+      renderCartItems('mini-cart-items-container');
+      renderCartItems('cart-items-container');
+      calculateCartTotal();
+    });
+
+    // --- Checkout Form Logic ---
+    const checkoutForm = document.getElementById('checkout-form');
+    if (checkoutForm) {
+      checkoutForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        // Simulate a successful order
+        checkoutForm.style.display = 'none';
+        document.getElementById('order-confirmation').style.display = 'block';
+
+        // Clear the cart
+        cart = [];
+        saveCart();
+        updateCartCount();
+      });
+    }
+
+    // --- Signup Page Integration ---
+    (() => {
+      const authCard = document.getElementById("auth-card");
+      const loginForm = document.getElementById("login-form");
+      const signupForm = document.getElementById("signup-form");
+      const forgotForm = document.getElementById("forgot-password-form");
+
+      const showSignupBtn = document.getElementById("show-signup");
+      const showLoginBtn = document.getElementById("show-login");
+      const forgotLink = document.getElementById("forgot-password-link");
+      const forgotCancelBtn = document.getElementById("forgot-cancel-btn");
+
+      const fpContactGroup = document.getElementById("fp-contact-group");
+      const fpOtpGroup = document.getElementById("fp-otp-group");
+      const fpNewPassGroup = document.getElementById("fp-new-pass-group");
+      const fpConfirmPassGroup = document.getElementById("fp-confirm-pass-group");
+      const forgotSubmitBtn = document.getElementById("forgot-submit-btn");
+
+      const KEY_USERS = "users_data";
+
+      // Load/Save users
+      function loadUsers() {
+        const data = localStorage.getItem(KEY_USERS);
+        return data ? JSON.parse(data) : [];
+      }
+
+      function saveUsers(users) {
+        localStorage.setItem(KEY_USERS, JSON.stringify(users));
+      }
+
+      // Validation helpers
+      function isValidEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+
+      function isValidPhone(phone) {
+        const re = /^\+?\d{7,15}$/;
+        return re.test(phone);
+      }
+
+      function isValidContact(input) {
+        return isValidEmail(input) || isValidPhone(input);
+      }
+
+      function isSouthAfricanPhone(phone) {
+        const saPhonePattern = /^\+27[678]\d{7}$/;
+        return saPhonePattern.test(phone);
+      }
+
+      function handleKey(e, handler) {
+        if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+          e.preventDefault();
+          handler();
+        }
+      }
+
+      function showLogin() {
+        authCard.classList.remove("is-flipped");
+        forgotForm.classList.remove("visible");
+        loginForm.style.visibility = "visible";
+        loginForm.style.opacity = "1";
+        loginForm.style.pointerEvents = "auto";
+        signupForm.style.visibility = "hidden";
+        signupForm.style.opacity = "0";
+        signupForm.style.pointerEvents = "none";
+        hideForgotPassword();
+      }
+
+      function showSignup() {
+        authCard.classList.add("is-flipped");
+        forgotForm.classList.remove("visible");
+        signupForm.style.visibility = "visible";
+        signupForm.style.opacity = "1";
+        signupForm.style.pointerEvents = "auto";
+        loginForm.style.visibility = "hidden";
+        loginForm.style.opacity = "0";
+        loginForm.style.pointerEvents = "none";
+        hideForgotPassword();
+      }
+
+      function showForgotPassword() {
+        forgotForm.classList.add("visible");
+        loginForm.style.visibility = "hidden";
+        loginForm.style.opacity = "0";
+        loginForm.style.pointerEvents = "none";
+        signupForm.style.visibility = "hidden";
+        signupForm.style.opacity = "0";
+        signupForm.style.pointerEvents = "none";
+        resetForgotPasswordForm();
+      }
+
+      function hideForgotPassword() {
+        forgotForm.classList.remove("visible");
+        resetForgotPasswordForm();
+      }
+
+      function resetForgotPasswordForm() {
+        fpContactGroup.style.display = "block";
+        fpOtpGroup.style.display = "none";
+        fpNewPassGroup.style.display = "none";
+        fpConfirmPassGroup.style.display = "none";
+        forgotSubmitBtn.textContent = "Send OTP";
+        forgotSubmitBtn.disabled = false;
+        forgotForm.reset();
+        currentFpStage = 0;
+        generatedOtp = null;
+        forgotForm.removeAttribute("data-contact");
+      }
+
+      let currentFpStage = 0;
+      let generatedOtp = null;
+
+      // Toggle events
+      showSignupBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        showSignup();
+      });
+      showSignupBtn.addEventListener("keydown", (e) => {
+        handleKey(e, showSignup);
+      });
+
+      showLoginBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        showLogin();
+      });
+      showLoginBtn.addEventListener("keydown", (e) => {
+        handleKey(e, showLogin);
+      });
+
+      forgotLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        showForgotPassword();
+      });
+      forgotLink.addEventListener("keydown", (e) => {
+        handleKey(e, showForgotPassword);
+      });
+
+      forgotCancelBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        showLogin();
+      });
+
+      // Signup form
+      signupForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const username = document.getElementById("signup-username").value.trim();
+        const contact = document.getElementById("signup-contact").value.trim();
+        const password = document.getElementById("signup-password").value;
+        const passwordConfirm = document.getElementById("signup-password-confirm").value;
+
+        if (!username) {
+          alert("Please enter a username.");
+          return;
+        }
+        if (!contact) {
+          alert("Please enter your email or phone number.");
+          return;
+        }
+        if (!isValidContact(contact)) {
+          alert("Please enter a valid email address or phone number.");
+          return;
+        }
+        if (password.length < 6) {
+          alert("Password must be at least 6 characters long.");
+          return;
+        }
+        if (password !== passwordConfirm) {
+          alert("Passwords do not match. Please check and try again.");
+          return;
+        }
+
+        const users = loadUsers();
+        if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+          alert("Username already taken. Please choose a different one.");
+          return;
+        }
+        if (users.some(u => u.contact.toLowerCase() === contact.toLowerCase())) {
+          alert("Email or phone number already registered. Please use a different one or sign in.");
+          return;
+        }
+        users.push({
+          username,
+          contact,
+          password,
+          socialProvider: null
+        });
+        saveUsers(users);
+
+        alert(`Signup successful. Welcome, ${username}! You can now sign in.`);
+        signupForm.reset();
+        showLogin();
+      });
+
+      // Login form
+      loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const identifier = document.getElementById("login-identifier").value.trim();
+        const password = document.getElementById("login-password").value;
+
+        if (!identifier) {
+          alert("Please enter your email, phone or username.");
+          return;
+        }
+        if (!password) {
+          alert("Please enter your password.");
+          return;
+        }
+
+        const users = loadUsers();
+        const user = users.find(u =>
+          u.username.toLowerCase() === identifier.toLowerCase() ||
+          u.contact.toLowerCase() === identifier.toLowerCase()
+        );
+
+        if (!user) {
+          alert("User not found. Please check your input or sign up.");
+          return;
+        }
+        if (user.password !== password) {
+          alert("Incorrect password. Please try again.");
+          return;
+        }
+        if (user.socialProvider) {
+          alert(`You previously signed up with ${user.socialProvider}. Please use that method to log in.`);
+          return;
+        }
+
+        alert(`Welcome back, ${user.username}! You are successfully logged in.`);
+        loginForm.reset();
+      });
+
+      // Forgot password
+      forgotForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        if (currentFpStage === 0) {
+          const contactInput = document.getElementById("forgot-contact").value.trim();
+          if (!contactInput) {
+            alert("Please enter your registered email or phone number.");
+            return;
+          }
+          if (!isValidContact(contactInput)) {
+            alert("Please enter a valid email address or phone number.");
+            return;
+          }
+          const users = loadUsers();
+          const user = users.find(u => u.contact.toLowerCase() === contactInput.toLowerCase());
+
+          if (!user) {
+            alert("No user found with that contact information.");
+            return;
+          }
+          if (user.socialProvider) {
+            alert(`This account was created via ${user.socialProvider}. Password reset is not available for social logins.`);
+            return;
+          }
+
+          generatedOtp = (Math.floor(100000 + Math.random() * 900000)).toString();
+          forgotForm.dataset.contact = contactInput;
+
+          if (isValidPhone(contactInput)) {
+            if (isSouthAfricanPhone(contactInput)) {
+              alert(`Sending OTP via SMS/WhatsApp to South African number ${contactInput}.\nYour OTP code is: ${generatedOtp} (demo)`);
+              // Replace with actual backend call to send SMS/WhatsApp OTP
+            } else {
+              alert(`Phone number entered is not a valid South African number.\nYour OTP code is: ${generatedOtp} (demo)`);
+            }
+          } else {
+            alert(`Sending OTP to your email ${contactInput}.\nYour OTP code is: ${generatedOtp} (demo)`);
+          }
+
+          fpContactGroup.style.display = "none";
+          fpOtpGroup.style.display = "block";
+          forgotSubmitBtn.textContent = "Verify OTP";
+          currentFpStage = 1;
+          forgotForm.reset();
+
+        } else if (currentFpStage === 1) {
+          const enteredOtp = document.getElementById("forgot-otp").value.trim();
+          if (!enteredOtp) {
+            alert("Please enter the OTP code sent to your email/phone.");
+            return;
+          }
+          if (enteredOtp !== generatedOtp) {
+            alert("Invalid OTP code. Please try again.");
+            return;
+          }
+
+          fpOtpGroup.style.display = "none";
+          fpNewPassGroup.style.display = "block";
+          fpConfirmPassGroup.style.display = "block";
+          forgotSubmitBtn.textContent = "Set New Password";
+          forgotForm.reset();
+          currentFpStage = 2;
+
+        } else if (currentFpStage === 2) {
+          const newPassword = document.getElementById("forgot-new-password").value;
+          const confirmNewPassword = document.getElementById("forgot-confirm-password").value;
+
+          if (newPassword.length < 6) {
+            alert("Password must be at least 6 characters long.");
+            return;
+          }
+          if (newPassword !== confirmNewPassword) {
+            alert("Passwords do not match. Please check and try again.");
+            return;
+          }
+
+          const contactToUpdate = forgotForm.dataset.contact;
+          if (!contactToUpdate) {
+            alert("Something went wrong. Please start the process again.");
+            resetForgotPasswordForm();
+            return;
+          }
+
+          const users = loadUsers();
+          const userIndex = users.findIndex(u => u.contact.toLowerCase() === contactToUpdate.toLowerCase());
+          if (userIndex === -1) {
+            alert("User not found. Please sign up.");
+            resetForgotPasswordForm();
+            return;
+          }
+
+          users[userIndex].password = newPassword;
+          saveUsers(users);
+
+          alert("Your password has been reset successfully. You can now sign in with your new password.");
+
+          resetForgotPasswordForm();
+          showLogin();
+        }
+      });
+
+      // Social Login Handler: Adds or logs in a user via social provider
+      function handleSocialLogin(provider, profile) {
+        if (!profile || !profile.email) {
+          alert(`Failed to retrieve email from ${provider}. Please ensure your social account email is accessible.`);
+          return;
+        }
+
+        let users = loadUsers();
+        let user = users.find(u => u.contact.toLowerCase() === profile.email.toLowerCase());
+
+        if (!user) {
+          // If user doesn't exist, create a new account
+          const newUser = {
+            username: profile.name || profile.email.split('@')[0],
+            contact: profile.email,
+            password: '', // Social logins don't have a password
+            socialProvider: provider
+          };
+          users.push(newUser);
+          saveUsers(users);
+          user = newUser;
+          alert(`Welcome, ${user.username}! Your account has been created via ${provider}.`);
+        } else {
+          // If user exists, check if they signed up with a social provider
+          if (user.socialProvider && user.socialProvider !== provider) {
+            alert(`This email is already linked to a ${user.socialProvider} account. Please use that method to log in.`);
+            return;
+          }
+          if (!user.socialProvider) {
+            // If they signed up with email/password, link the social account
+            user.socialProvider = provider;
+            saveUsers(users);
+            alert(`Your existing account has been linked to ${provider}.`);
+          }
+          alert(`Welcome back, ${user.username}! You are logged in with ${provider}.`);
+        }
+
+        loginForm.reset();
+        signupForm.reset();
+        hideForgotPassword();
+        showLogin();
+      }
+
+      // Google Sign-In Integration
+      window.onload = () => {
+        // Only initialize if the script is loaded and the button exists
+        const googleButton = document.getElementById('google-signin-btn');
+        if (typeof google !== 'undefined' && googleButton) {
+          google.accounts.id.initialize({
+            client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', // ⚠️ REPLACE THIS with your actual Google Client ID
+            callback: handleGoogleCredentialResponse,
+            cancel_on_tap_outside: true,
+            auto_select: false,
+          });
+
+          // The prompt will only show if the button is clicked
+          googleButton.addEventListener('click', () => {
+            google.accounts.id.prompt();
+          });
+        }
+      };
+
+      function handleGoogleCredentialResponse(response) {
+        if (response.credential) {
+          const jwt = parseJwt(response.credential);
+          if (jwt) {
+            // The Google ID token contains the user's profile information
+            handleSocialLogin('google', {
+              name: jwt.name,
+              email: jwt.email
+            });
+          } else {
+            alert('Failed to parse Google credential.');
+          }
+        }
+      }
+
+      function parseJwt(token) {
+        try {
+          const base64Url = token.split('.')[1];
+          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+          const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
+            '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+          ).join(''));
+          return JSON.parse(jsonPayload);
+        } catch (e) {
+          console.error('JWT parse error:', e);
+          return null;
+        }
+      }
+
+      // Facebook SDK Integration
+      window.fbAsyncInit = function () {
+        FB.init({
+          appId: 'YOUR_FACEBOOK_APP_ID', // ⚠️ REPLACE THIS with your actual Facebook App ID
+          cookie: true,
+          xfbml: true,
+          version: 'v17.0'
+        });
+      };
+      
+      const fbButton = document.getElementById('fb-login-btn');
+      if (fbButton) {
+          fbButton.addEventListener('click', () => {
+              FB.login(response => {
+                if (response.authResponse) {
+                  FB.api('/me', {
+                    fields: 'name,email'
+                  }, profile => {
+                    if (profile && profile.email) {
+                      handleSocialLogin('facebook', profile);
+                    } else {
+                      alert('Facebook login succeeded, but could not retrieve email.');
+                    }
+                  });
+                } else {
+                  alert('Facebook login was cancelled or not authorized.');
+                }
+              }, {
+                scope: 'public_profile,email'
+              });
+          });
+      }
+
+      // Placeholder functions for Twitter and GitHub (Requires a Backend)
+      document.getElementById('twitter-login-btn').addEventListener('click', () => {
+        alert("This feature requires a backend server to securely handle Twitter's OAuth flow. For a demo, a placeholder login is being used.");
+        // Simulated social login for the demo
+        handleSocialLogin('twitter', {
+          name: 'Twitter User',
+          email: 'twitter_user@example.com'
+        });
+      });
+
+      document.getElementById('github-login-btn').addEventListener('click', () => {
+        alert("This feature requires a backend server to securely handle GitHub's OAuth flow. For a demo, a placeholder login is being used.");
+        // Simulated social login for the demo
+        handleSocialLogin('github', {
+          name: 'GitHub User',
+          email: 'github_user@example.com'
+        });
+      });
+      
+    })();
+  </script>
+
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</body>
+
+</html>
