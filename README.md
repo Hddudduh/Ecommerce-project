@@ -1,2 +1,0 @@
-# Ecommerce-project
-shopping online
